@@ -91,16 +91,6 @@ button:active {
 	background: white;
 }
 
-.tooltip {
-	cursor: pointer;
-	border-radius: 0 !important;
-	background: #000;
-	color: #fff;
-	width: 100%;
-	position: fixed;
-	bottom: 0;
-}
-
 #active-projects {
 	border: 1px solid #870099;
 }

@@ -12,6 +12,10 @@ class DOMHelper {
 		const destinationElement = document.querySelector(newDestinationSelector);
 
 		destinationElement.append(element);
+
+		element.scrollIntoView({
+			behavior: 'smooth'
+		});
 	}
 }
 
@@ -40,11 +44,11 @@ class Component {
 }
 
 class Tooltip extends Component {
-	constructor(closeNotifierFunction, tooltipText) {
-		super();
+	constructor(closeNotifierFunction, text, hostElementId) {
+		super(hostElementId);
 
 		this.closeNotifier = closeNotifierFunction;
-		this.tooltipText = tooltipText;
+		this.text = text;
 		this.create();
 	}
 
@@ -52,7 +56,26 @@ class Tooltip extends Component {
 		const tooltipElement = document.createElement('div');
 
 		tooltipElement.className = 'card tooltip';
-		tooltipElement.textContent = this.tooltipText;
+
+		const tooltipTemplate = document.getElementById('tooltip');
+		const tooltipBody = document.importNode(tooltipTemplate.content, true);
+
+		tooltipBody.querySelector('p').textContent = this.text;
+
+		tooltipElement.append(tooltipBody);
+
+		const hostElementPositionLeft = this.hostElement.offsetLeft;
+		const hostElementPositionTop = this.hostElement.offsetTop;
+		const hostElementHeight = this.hostElement.clientHeight;
+		const parentElementScrolling = this.hostElement.parentElement.scrollTop;
+
+		const x = hostElementPositionLeft + 20;
+		const y = hostElementPositionTop + (hostElementHeight - parentElementScrolling - 10);
+
+		tooltipElement.style.position = 'absolute';
+		tooltipElement.style.left = x + 'px';
+		tooltipElement.style.top = y + 'px';
+
 		tooltipElement.addEventListener('click', this.closeTooltip);
 
 		this.element = tooltipElement;
@@ -75,13 +98,20 @@ class ProjectItem {
 		this.connectSwitchButton(type);
 	}
 
-	showMoreInfoHandler(tooltipText) {
+	showMoreInfoHandler() {
 		if (this.hasActiveTooltip)
 			return;
 
-		const tooltip = new Tooltip(() => {
-			this.hasActiveTooltip = false;
-		}, tooltipText);
+		const projectElement = document.getElementById(this.id);
+		const tooltipText = projectElement.dataset.extraInfo;
+
+		const tooltip = new Tooltip(
+			() => {
+				this.hasActiveTooltip = false;
+			}, 
+			tooltipText,
+			this.id
+		);
 
 		tooltip.attach();
 
@@ -91,9 +121,8 @@ class ProjectItem {
 	connectMoreInfoButton() {
 		const projectItemElement = document.getElementById(this.id);
 		const moreInfoButton = projectItemElement.querySelector('button:first-of-type');
-		const tooltipText = projectItemElement.getAttribute('data-extra-info');
 
-		moreInfoButton.addEventListener('click', this.showMoreInfoHandler.bind(this, tooltipText));
+		moreInfoButton.addEventListener('click', this.showMoreInfoHandler.bind(this));
 	}
 
 	connectSwitchButton(type) {
