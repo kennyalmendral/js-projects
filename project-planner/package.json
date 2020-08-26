@@ -1,0 +1,25 @@
+{
+  "name": "project-planner",
+  "version": "1.0.0",
+  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eget semper nisl.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "build:dev": "webpack-dev-server",
+    "build:prod": "webpack --config webpack.config.prod.js"
+  },
+  "author": "Kenny Almendral",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-eslint": "^8.2.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "eslint": "^4.19.1",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.20"
+  }
+}
